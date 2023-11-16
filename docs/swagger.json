@@ -1,0 +1,720 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Boo - OpenAPI 3.0",
+    "contact": {
+      "email": "luckzivanius@gmail.com"
+    },
+    "version": "0.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:{port}/api/",
+      "description": "Local Development Server",
+      "variables": {
+        "port": {
+          "default": "3000",
+          "description": "Development URL"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentication"
+    },
+    {
+      "name": "Profile"
+    },
+    {
+      "name": "Comment"
+    }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "summary": "Login",
+        "tags": ["Authentication"],
+        "description": "Login using name",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User logged in successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/token"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/bad-request"
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "summary": "Register user",
+        "tags": ["Authentication"],
+        "description": "Register using name",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully"
+          },
+          "400": {
+            "$ref": "#/components/responses/bad-request"
+          }
+        }
+      }
+    },
+    "/profiles": {
+      "get": {
+        "summary": "Get a list of profiles",
+        "tags": ["Profile"],
+        "description": "Retrieve a list of profile.",
+        "responses": {
+          "200": {
+            "description": "A list of profiles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/list"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorized"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create profile",
+        "tags": ["Profile"],
+        "description": "Create profile",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "mbti": {
+                    "type": "string",
+                    "enum": [
+                      "INFP",
+                      "INFJ",
+                      "ENFP",
+                      "ENFJ",
+                      "INTJ",
+                      "INTP",
+                      "ENTP",
+                      "ENTJ",
+                      "ISFP",
+                      "ISFJ",
+                      "ESFP",
+                      "ESFJ",
+                      "ISTP",
+                      "ISTJ",
+                      "ESTP",
+                      "ESTJ"
+                    ]
+                  },
+                  "enneagram": {
+                    "type": "string",
+                    "enum": [
+                      "1w9",
+                      "2w1",
+                      "2w3",
+                      "3w2",
+                      "3w4",
+                      "4w3",
+                      "4w5",
+                      "5w4",
+                      "5w6",
+                      "6w5",
+                      "6w7",
+                      "7w6",
+                      "7w8",
+                      "8w7",
+                      "8w9",
+                      "9w1",
+                      "9w8"
+                    ]
+                  },
+                  "variant": {
+                    "type": "string",
+                    "enum": [
+                      "sp/so",
+                      "so/sp",
+                      "sp/sx",
+                      "sx/sp",
+                      "so/sx",
+                      "sx/so"
+                    ]
+                  },
+                  "tritype": {
+                    "type": "number"
+                  },
+                  "socionics": {
+                    "type": "string",
+                    "enum": [
+                      "SEE",
+                      "LII",
+                      "IEE",
+                      "EIE",
+                      "SLE",
+                      "LIE",
+                      "ESI",
+                      "LSI",
+                      "ILI",
+                      "ESE",
+                      "LSE",
+                      "IEI",
+                      "SEI",
+                      "SLI",
+                      "ESI",
+                      "IEE",
+                      "SEE",
+                      "ILI",
+                      "LII",
+                      "EIE"
+                    ]
+                  },
+                  "sloan": {
+                    "type": "string",
+                    "enum": [
+                      "RCOAI",
+                      "RCOAN",
+                      "RCOEN",
+                      "RCOIN",
+                      "RCOAR",
+                      "RCOIR"
+                    ]
+                  },
+                  "psyche": {
+                    "type": "string",
+                    "enum": [
+                      "FEVL",
+                      "FEVR",
+                      "FIVE",
+                      "FLVE",
+                      "FLVN",
+                      "FONE",
+                      "FLVE",
+                      "SEVL",
+                      "SEVR",
+                      "SIXE",
+                      "SIXN",
+                      "SEVE",
+                      "FEVE"
+                    ]
+                  },
+                  "temperaments": {
+                    "type": "string",
+                    "enum": [
+                      "Sanguine",
+                      "Choleric",
+                      "Phlegmatic",
+                      "Melancholic"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile created"
+          },
+          "400": {
+            "$ref": "#/components/responses/bad-request"
+          }
+        }
+      }
+    },
+    "/profiles/{profileId}": {
+      "get": {
+        "summary": "Get profile details by id",
+        "tags": ["Profile"],
+        "description": "Retrieve details of the selected profile.",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "description": "The id of the profile to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Profile details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/profile"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/not-found"
+          }
+        }
+      }
+    },
+    "/profiles/{profileId}/comments": {
+      "get": {
+        "summary": "Get comment by profile id",
+        "tags": ["Profile", "Comment"],
+        "description": "Retrieve comments of the selected profile.",
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "description": "The id of the profile to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort comments by",
+            "schema": {
+              "type": "string",
+              "enum": ["recent", "best"]
+            }
+          },
+          {
+            "name": "filterType",
+            "in": "query",
+            "description": "Filter by",
+            "schema": {
+              "type": "string",
+              "enum": ["mbti", "enneagram", "zodiac"]
+            }
+          },
+          {
+            "name": "filterValue",
+            "in": "query",
+            "description": "Filter value",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Comment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/comment"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/not-found"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a profile comment",
+        "tags": ["Profile", "Comment"],
+        "description": "Create a profile comment.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "profileId",
+            "in": "path",
+            "description": "The id of the profile",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "voting": {
+                    "type": "object",
+                    "properties": {
+                      "mbti": {
+                        "type": "string",
+                        "enum": [
+                          "INFP",
+                          "INFJ",
+                          "ENFP",
+                          "ENFJ",
+                          "INTJ",
+                          "INTP",
+                          "ENTP",
+                          "ENTJ",
+                          "ISFP",
+                          "ISFJ",
+                          "ESFP",
+                          "ESFJ",
+                          "ISTP",
+                          "ISTJ",
+                          "ESTP",
+                          "ESTJ"
+                        ]
+                      },
+                      "enneagram": {
+                        "type": "string",
+                        "enum": [
+                          "1w9",
+                          "2w1",
+                          "2w3",
+                          "3w2",
+                          "3w4",
+                          "4w3",
+                          "4w5",
+                          "5w4",
+                          "5w6",
+                          "6w5",
+                          "6w7",
+                          "7w6",
+                          "7w8",
+                          "8w7",
+                          "8w9",
+                          "9w1",
+                          "9w8"
+                        ]
+                      },
+                      "zodiac": {
+                        "type": "string",
+                        "enum": [
+                          "Aries",
+                          "Taurus",
+                          "Gemini",
+                          "Cancer",
+                          "Leo",
+                          "Virgo",
+                          "Libra",
+                          "Scorpio",
+                          "Sagittarius",
+                          "Capricorn",
+                          "Aquarius",
+                          "Pisces"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created a comment successfully"
+          },
+          "400": {
+            "$ref": "#/components/responses/bad-request"
+          },
+          "401": {
+            "$ref": "#/components/responses/unauthorized"
+          }
+        }
+      }
+    },
+    "/profiles/comments/{commentId}/like": {
+      "put": {
+        "summary": "Like a comment",
+        "tags": ["Comment"],
+        "description": "Like a selected comment",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "description": "The id of the comment",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Comment liked successfully"
+          },
+          "400": {
+            "$ref": "#/components/responses/bad-request"
+          },
+          "404": {
+            "$ref": "#/components/responses/not-found"
+          }
+        }
+      }
+    },
+    "/profiles/comments/{commentId}/unlike": {
+      "put": {
+        "summary": "Unlike a comment",
+        "tags": ["Comment"],
+        "description": "Remove like from a selected comment",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "description": "The id of the comment",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Comment unliked successfully"
+          },
+          "400": {
+            "$ref": "#/components/responses/bad-request"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Error": {
+        "$ref": "#/components/schemas/error"
+      },
+      "List": {
+        "$ref": "#/components/schemas/list"
+      },
+      "Profile": {
+        "$ref": "#/components/schemas/profile"
+      },
+      "Comment": {
+        "$ref": "#/components/schemas/comment"
+      },
+      "Token": {
+        "$ref": "#/components/schemas/token"
+      },
+      "token": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "error": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "profile": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "mbti": {
+            "type": "string"
+          },
+          "enneagram": {
+            "type": "string"
+          },
+          "variant": {
+            "type": "string"
+          },
+          "tritype": {
+            "type": "number"
+          },
+          "socionics": {
+            "type": "string"
+          },
+          "sloan": {
+            "type": "string"
+          },
+          "psyche": {
+            "type": "string"
+          },
+          "temperaments": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          }
+        }
+      },
+      "comment": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "voting": {
+            "type": "object",
+            "properties": {
+              "mbti": {
+                "type": "string"
+              },
+              "enneagram": {
+                "type": "string"
+              },
+              "zodiac": {
+                "type": "string"
+              }
+            }
+          },
+          "likes": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string"
+          }
+        }
+      },
+      "list": {
+        "type": "array",
+        "items": {
+          "oneOf": [
+            {
+              "$ref": "#/components/schemas/profile"
+            }
+          ]
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "responses": {
+      "bad-request": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/error"
+            },
+            "example": {
+              "message": "Bad request"
+            }
+          }
+        }
+      },
+      "unauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/error"
+            },
+            "example": {
+              "message": "Unauthorized"
+            }
+          }
+        }
+      },
+      "not-found": {
+        "description": "Not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/error"
+            },
+            "example": {
+              "message": "Item (...) not found"
+            }
+          }
+        }
+      }
+    }
+  }
+}
