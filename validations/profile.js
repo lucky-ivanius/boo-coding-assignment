@@ -236,15 +236,6 @@ const getProfileCommentsValidationSchema = z.object({
   filterValue: z.string().optional(),
 });
 
-const toggleLikeCommentValidationSchema = z.object({
-  commentId: z.string({
-    errorMap: () => ({ message: "Invalid Comment" }),
-  }),
-  userId: z.string({
-    errorMap: () => ({ message: "Invalid User" }),
-  }),
-});
-
 const createProfileValidation = async (req, res, next) => {
   const result = createProfileValidationSchema.safeParse(req.body);
 
@@ -291,24 +282,8 @@ const getProfileCommentsValidation = async (req, res, next) => {
   next();
 };
 
-const toggleLikeCommentValidation = async (req, res, next) => {
-  const result = toggleLikeCommentValidationSchema.safeParse({
-    commentId: req.params.commentId,
-    userId: req.auth?.userId,
-  });
-
-  if (!result.success) {
-    return httpResponse.badRequest(res, result.error.issues.at(0).message);
-  }
-
-  req.validatedRequestData = result.data;
-
-  next();
-};
-
 module.exports = {
   createProfileValidation,
   createProfileCommentValidation,
   getProfileCommentsValidation,
-  toggleLikeCommentValidation,
 };

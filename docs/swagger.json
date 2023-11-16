@@ -480,7 +480,7 @@
         }
       }
     },
-    "/profiles/comments/{commentId}/like": {
+    "/comments/{commentId}/like": {
       "put": {
         "summary": "Like a comment",
         "tags": ["Comment"],
@@ -505,42 +505,14 @@
           "200": {
             "description": "Comment liked successfully"
           },
+          "204": {
+            "description": "Comment's like removed successfully"
+          },
           "400": {
             "$ref": "#/components/responses/bad-request"
           },
           "404": {
             "$ref": "#/components/responses/not-found"
-          }
-        }
-      }
-    },
-    "/profiles/comments/{commentId}/unlike": {
-      "put": {
-        "summary": "Unlike a comment",
-        "tags": ["Comment"],
-        "description": "Remove like from a selected comment",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "commentId",
-            "in": "path",
-            "description": "The id of the comment",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Comment unliked successfully"
-          },
-          "400": {
-            "$ref": "#/components/responses/bad-request"
           }
         }
       }

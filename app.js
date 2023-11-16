@@ -12,6 +12,7 @@ const profilePageRoutes = require("./routes/page/profile");
 
 const authApiRoutes = require("./routes/api/auth");
 const profileApiRoutes = require("./routes/api/profile");
+const commentApiRoutes = require("./routes/api/comment");
 
 const swaggerDocsRoutes = require("./routes/docs/swagger");
 
@@ -37,6 +38,7 @@ const startServer = async () => {
   // api routes
   app.use("/api/auth", authApiRoutes());
   app.use("/api/profiles", profileApiRoutes());
+  app.use("/api/comments", commentApiRoutes());
 
   // doc routes
   app.use("/docs", swaggerDocsRoutes());

@@ -13,8 +13,6 @@ const {
   getProfilesController,
   createProfileCommentController,
   getProfileCommentsController,
-  likeCommentController,
-  unlikeCommentController,
 } = require("../../controllers/profile");
 
 const profileDataAccessMock = {
@@ -127,18 +125,6 @@ app.get(
   getProfileCommentsValidation,
   getProfileCommentsController(profileDataAccessMock, commentDataAccessMock)
 );
-app.put(
-  "/comments/:commentId/like",
-  authMiddlewareMock,
-  toggleLikeCommentValidation,
-  likeCommentController(commentDataAccessMock, likeDataAccessMock)
-);
-app.put(
-  "/comments/:commentId/unlike",
-  authMiddlewareMock,
-  toggleLikeCommentValidation,
-  unlikeCommentController(commentDataAccessMock, likeDataAccessMock)
-);
 
 describe("Controller: Profile", () => {
   beforeEach(() => {
@@ -151,10 +137,6 @@ describe("Controller: Profile", () => {
     commentDataAccessMock.findByProfileId.mockReset();
     commentDataAccessMock.exists.mockReset();
     commentDataAccessMock.addLikes.mockReset();
-
-    likeDataAccessMock.exists.mockReset();
-    likeDataAccessMock.create.mockReset();
-    likeDataAccessMock.delete.mockReset();
   });
 
   describe("createProfileController", () => {
@@ -232,91 +214,6 @@ describe("Controller: Profile", () => {
       expect(response.status).toBe(404);
       expect(profileDataAccessMock.exists).toHaveBeenCalledTimes(1);
       expect(commentDataAccessMock.findByProfileId).not.toHaveBeenCalled();
-    });
-  });
-
-  describe("likeCommentController", () => {
-    it("should return 200 OK", async () => {
-      const commentId = "1234";
-
-      likeDataAccessMock.exists.mockResolvedValue(false);
-      commentDataAccessMock.exists.mockResolvedValue(true);
-
-      const response = await request(app)
-        .put(`/comments/${commentId}/like`)
-        .send();
-
-      expect(response.status).toBe(200);
-      expect(likeDataAccessMock.exists).toHaveBeenCalledTimes(1);
-      expect(commentDataAccessMock.exists).toHaveBeenCalledTimes(1);
-      expect(likeDataAccessMock.create).toHaveBeenCalledTimes(1);
-      expect(commentDataAccessMock.addLikes).toHaveBeenCalledTimes(1);
-    });
-
-    it("should return 400 bad request when the comment is has been liked", async () => {
-      const commentId = "1234";
-
-      likeDataAccessMock.exists.mockResolvedValue(true);
-
-      const response = await request(app)
-        .put(`/comments/${commentId}/like`)
-        .send();
-
-      expect(response.status).toBe(400);
-      expect(likeDataAccessMock.exists).toHaveBeenCalledTimes(1);
-      expect(commentDataAccessMock.exists).not.toHaveBeenCalled();
-      expect(likeDataAccessMock.create).not.toHaveBeenCalled();
-      expect(commentDataAccessMock.addLikes).not.toHaveBeenCalled();
-    });
-
-    it("should return 400 bad request when the comment is not found", async () => {
-      const commentId = "1234";
-
-      likeDataAccessMock.exists.mockResolvedValue(false);
-      commentDataAccessMock.exists.mockResolvedValue(false);
-
-      const response = await request(app)
-        .put(`/comments/${commentId}/like`)
-        .send();
-
-      expect(response.status).toBe(404);
-      expect(likeDataAccessMock.exists).toHaveBeenCalledTimes(1);
-      expect(commentDataAccessMock.exists).toHaveBeenCalledTimes(1);
-      expect(likeDataAccessMock.create).not.toHaveBeenCalled();
-      expect(commentDataAccessMock.addLikes).not.toHaveBeenCalled();
-    });
-  });
-
-  describe("unlikeCommentController", () => {
-    it("should return 200 OK", async () => {
-      const commentId = "1234";
-
-      likeDataAccessMock.exists.mockResolvedValue(true);
-
-      const response = await request(app)
-        .put(`/comments/${commentId}/unlike`)
-        .send();
-
-      expect(response.status).toBe(204);
-      expect(likeDataAccessMock.exists).toHaveBeenCalledTimes(1);
-      expect(likeDataAccessMock.delete).toHaveBeenCalledTimes(1);
-      expect(commentDataAccessMock.addLikes).toHaveBeenCalledTimes(1);
-    });
-
-    it("should return 400 bad request when the comment is has not been liked", async () => {
-      const commentId = "1234";
-
-      likeDataAccessMock.exists.mockResolvedValue(false);
-
-      const response = await request(app)
-        .put(`/comments/${commentId}/unlike`)
-        .send();
-
-      expect(response.status).toBe(400);
-      expect(likeDataAccessMock.exists).toHaveBeenCalledTimes(1);
-      expect(commentDataAccessMock.exists).not.toHaveBeenCalled();
-      expect(likeDataAccessMock.delete).not.toHaveBeenCalled();
-      expect(commentDataAccessMock.addLikes).not.toHaveBeenCalled();
     });
   });
 });

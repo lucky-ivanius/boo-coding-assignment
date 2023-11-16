@@ -95,54 +95,6 @@ const getProfileCommentsController = (profileDataAccess, commentDataAccess) => {
   };
 };
 
-const likeCommentController = (commentDataAccess, likeDataAccess) => {
-  return async function (req, res, next) {
-    try {
-      const likeExists = await likeDataAccess.exists(req.validatedRequestData);
-
-      if (likeExists)
-        return httpResponse.badRequest(res, "You have liked this comments");
-
-      const commentExists = await commentDataAccess.exists(
-        req.params.commentId
-      );
-
-      if (!commentExists) return httpResponse.notFound(res, "Comment");
-
-      await likeDataAccess.create(req.validatedRequestData);
-      await commentDataAccess.addLikes({
-        commentId: req.params.commentId,
-        likes: 1,
-      });
-
-      return httpResponse.ok(res);
-    } catch (error) {
-      return httpResponse.unexpected(res);
-    }
-  };
-};
-
-const unlikeCommentController = (commentDataAccess, likeDataAccess) => {
-  return async function (req, res, next) {
-    try {
-      const likeExists = await likeDataAccess.exists(req.validatedRequestData);
-
-      if (!likeExists)
-        return httpResponse.badRequest(res, "Unable to unlike this comment");
-
-      await likeDataAccess.delete(req.validatedRequestData);
-      await commentDataAccess.addLikes({
-        commentId: req.params.commentId,
-        likes: -1,
-      });
-
-      return httpResponse.noContent(res);
-    } catch (error) {
-      return httpResponse.unexpected(res);
-    }
-  };
-};
-
 module.exports = {
   renderProfileByIdController,
   createProfileController,
@@ -150,6 +102,4 @@ module.exports = {
   getProfilesController,
   createProfileCommentController,
   getProfileCommentsController,
-  likeCommentController,
-  unlikeCommentController,
 };
